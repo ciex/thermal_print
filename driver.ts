@@ -25,8 +25,14 @@ function stringToBytes(str: string) {
   );
 }
 
-export async function reset(device: USBDevice) {
-  await sendBytes(device, new Uint8Array([ESC, 0x40]));
+export async function reset(device: USBDevice) {  
+  try {
+    await sendBytes(device, new Uint8Array([ESC, 0x40]));
+  } catch(err) {
+    console.error('There was an error connection to the device:', err.message)
+    throw err
+  }
+  
 }
 
 export async function reverse(
@@ -42,7 +48,7 @@ export async function sendText(device: USBDevice, str: string) {
 }
 
 export async function sendBytes(device: USBDevice, bytes: Uint8Array) {
-  return await device.transferOut(1, bytes);
+  return device.transferOut(3, bytes);
 }
 
 export async function setCharacterStyle(
